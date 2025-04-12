@@ -11,7 +11,7 @@ def canUnlockAll(boxes):
     Determines if all the boxes can be opened.
 
     Args:
-        boxes (list of lists): List of lists where each list represents a box 
+        boxes (list of lists): List of lists where each list represents a box
         and contains keys to other boxes.
 
     Returns:
