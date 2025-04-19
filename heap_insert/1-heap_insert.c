@@ -1,111 +1,115 @@
-#include "binary_trees.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include "binary_trees.h"
 
 /**
  * heap_insert - Inserts a value into a Max Binary Heap
- * @root: A double pointer to the root node of the Heap
- * @value: The value to store in the node to be inserted
  *
- * Return: A pointer to the created node, or NULL on failure
+ * @root: Double pointer to the root node of the Heap
+ * @value: Value to store in the node to be inserted
+ * Return: Pointer to the inserted node, or NULL on failure
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	heap_t *new_node, *parent;
-	size_t size;
+	heap_t *new_node;
 
 	if (!root)
 		return (NULL);
 
-	new_node = binary_tree_node(NULL, value);
+	if (!*root)
+	{
+		*root = binary_tree_node(NULL, value);
+		return (*root);
+	}
 
+	new_node = insert_node(*root, value);
 	if (!new_node)
 		return (NULL);
 
-	if (!*root)
+	while (new_node->parent && new_node->n > new_node->parent->n)
 	{
-		*root = new_node;
-		return (new_node);
+		int tmp = new_node->n;
+
+		new_node->n = new_node->parent->n;
+		new_node->parent->n = tmp;
+		new_node = new_node->parent;
 	}
 
-	size = binary_tree_size(*root);
-	parent = get_node_at_index(*root, (size - 1) / 2);
+	return (new_node);
+}
 
-	new_node->parent = parent;
+/**
+ * insert_node - Inserts a value into a Max Binary Heap
+ *
+ * @root: Pointer to the root node of the Heap
+ * @value: Value to store in the node to be inserted
+ * Return: Pointer to the inserted node, or NULL on failure
+ */
+heap_t *insert_node(heap_t *root, int value)
+{
+	heap_t *new_node;
+	heap_t *parent = find_parent(root);
+
+	if (!parent)
+		return (NULL);
+
+	new_node = binary_tree_node(parent, value);
+	if (!new_node)
+		return (NULL);
+
 	if (!parent->left)
 		parent->left = new_node;
 	else
 		parent->right = new_node;
 
-	heapify_up(new_node);
 	return (new_node);
 }
 
 /**
- * binary_tree_size - Measures the size of a binary tree
- * @tree: Pointer to the root node of the tree to measure the size
+ * find_parent - Finds the parent node for the new node to be inserted
  *
- * Return: The size of the tree
+ * @root: Pointer to the root node of the Heap
+ * Return: Pointer to the parent node, or NULL on failure
  */
-size_t binary_tree_size(const binary_tree_t *tree)
+heap_t *find_parent(heap_t *root)
 {
-	if (!tree)
-		return (0);
-
-	return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
-}
-
-/**
- * get_node_at_index - Gets the node at a given index (level-order)
- * @root: Pointer to the root node
- * @index: Index of the node to retrieve
- *
- * Return: Pointer to the node at the index, or NULL if not found
- */
-heap_t *get_node_at_index(heap_t *root, size_t index)
-{
-	heap_t *queue[1024];
-	size_t front = 0, rear = 0, count = 0;
+	heap_t *parent;
+	heap_t **queue;
+	size_t front, rear, size;
 
 	if (!root)
 		return (NULL);
 
+	size = tree_size(root);
+	queue = malloc(size * sizeof(*queue));
+	if (!queue)
+		return (NULL);
+
+	front = rear = 0;
 	queue[rear++] = root;
-	count++;
 
-	size_t i = 0;
-
-	while (i < count)
+	while (front < rear)
 	{
-		heap_t *current = queue[i];
-
-		if (i == index)
-			return (current);
-
-		if (current->left)
-			queue[count++] = current->left;
-		if (current->right)
-			queue[count++] = current->right;
-
-		i++;
+		parent = queue[front++];
+		if (!parent->left || !parent->right)
+			break;
+		queue[rear++] = parent->left;
+		queue[rear++] = parent->right;
 	}
 
-	return (NULL);
+	free(queue);
+	return (parent);
 }
 
 /**
- * heapify_up - Maintains the heap property after insertion
- * @node: Pointer to the newly inserted node
+ * tree_size - Measures the size of a binary tree
+ *
+ * @tree: Pointer to the root node of the tree to measure
+ * Return: The size of the tree
  */
-void heapify_up(heap_t *node)
+size_t tree_size(const binary_tree_t *tree)
 {
-	int temp;
-
-	while (node->parent && node->n > node->parent->n)
-	{
-		temp = node->n;
-		node->n = node->parent->n;
-		node->parent->n = temp;
-
-		node = node->parent;
-	}
+	if (!tree)
+		return (0);
+	return (1 + tree_size(tree->left) + tree_size(tree->right));
 }
