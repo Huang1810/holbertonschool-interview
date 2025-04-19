@@ -8,9 +8,10 @@
  */
 void swap_values(heap_t *a, heap_t *b)
 {
-    int temp = a->n;
-    a->n = b->n;
-    b->n = temp;
+	/* Swapping values between nodes */
+	int temp = a->n;
+	a->n = b->n;
+	b->n = temp;
 }
 
 /**
@@ -20,12 +21,12 @@ void swap_values(heap_t *a, heap_t *b)
  */
 heap_t *heapify_up(heap_t *node)
 {
-    while (node->parent && node->n > node->parent->n)
-    {
-        swap_values(node, node->parent);
-        node = node->parent;
-    }
-    return node;
+	while (node->parent && node->n > node->parent->n)
+	{
+		swap_values(node, node->parent);
+		node = node->parent;
+	}
+	return (node);
 }
 
 /**
@@ -35,9 +36,9 @@ heap_t *heapify_up(heap_t *node)
  */
 size_t get_size(const heap_t *root)
 {
-    if (!root)
-        return 0;
-    return 1 + get_size(root->left) + get_size(root->right);
+	if (!root)
+		return (0);
+	return (1 + get_size(root->left) + get_size(root->right));
 }
 
 /**
@@ -48,31 +49,36 @@ size_t get_size(const heap_t *root)
  */
 heap_t *get_node_at_index(heap_t *root, size_t index)
 {
-    if (!root || index == 0)
-        return (heap_t *)root;
+	if (!root || index == 0)
+		return (root);
 
-    size_t count = 0;
-    heap_t **queue = malloc(sizeof(heap_t *) * 1024);
-    heap_t *node = NULL;
-    if (!queue)
-        return NULL;
+	size_t count = 0;
+	heap_t **queue = malloc(sizeof(heap_t *) * 1024);
+	heap_t *node = NULL;
 
-    queue[count++] = (heap_t *)root;
-    size_t i = 0;
-    while (i < count)
-    {
-        node = queue[i];
-        if (i == index)
-            break;
-        if (node->left)
-            queue[count++] = node->left;
-        if (node->right)
-            queue[count++] = node->right;
-        i++;
-    }
-    heap_t *result = (i == index) ? node : NULL;
-    free(queue);
-    return result;
+	if (!queue)
+		return (NULL);
+
+	queue[count++] = root;
+	size_t i = 0;
+
+	while (i < count)
+	{
+		node = queue[i];
+		if (i == index)
+			break;
+
+		if (node->left)
+			queue[count++] = node->left;
+		if (node->right)
+			queue[count++] = node->right;
+
+		i++;
+	}
+
+	heap_t *result = (i == index) ? node : NULL;
+	free(queue);
+	return (result);
 }
 
 /**
@@ -83,35 +89,35 @@ heap_t *get_node_at_index(heap_t *root, size_t index)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node, *parent;
-    size_t size;
+	heap_t *new_node, *parent;
+	size_t size;
 
-    if (!root)
-        return NULL;
+	if (!root)
+		return (NULL);
 
-    new_node = binary_tree_node(NULL, value);
-    if (!new_node)
-        return NULL;
+	new_node = binary_tree_node(NULL, value);
+	if (!new_node)
+		return (NULL);
 
-    if (!*root)
-    {
-        *root = new_node;
-        return new_node;
-    }
+	if (!*root)
+	{
+		*root = new_node;
+		return (new_node);
+	}
 
-    size = get_size(*root);
-    parent = get_node_at_index(*root, (size - 1) / 2);
-    if (!parent)
-    {
-        free(new_node);
-        return NULL;
-    }
+	size = get_size(*root);
+	parent = get_node_at_index(*root, (size - 1) / 2);
+	if (!parent)
+	{
+		free(new_node);
+		return (NULL);
+	}
 
-    new_node->parent = parent;
-    if (!parent->left)
-        parent->left = new_node;
-    else
-        parent->right = new_node;
+	new_node->parent = parent;
+	if (!parent->left)
+		parent->left = new_node;
+	else
+		parent->right = new_node;
 
-    return heapify_up(new_node);
+	return (heapify_up(new_node));
 }
