@@ -11,6 +11,7 @@ void swap_values(heap_t *a, heap_t *b)
 	/* Swapping values between nodes */
 	int temp = a->n;
 	a->n = b->n;
+    
 	b->n = temp;
 }
 
@@ -78,6 +79,7 @@ heap_t *get_node_at_index(heap_t *root, size_t index)
 
 	heap_t *result = (i == index) ? node : NULL;
 	free(queue);
+
 	return (result);
 }
 
