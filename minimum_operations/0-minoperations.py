@@ -4,9 +4,10 @@
 
 def minOperations(n):
     """
-    Calculates the minimum number of operations needed to get exactly n 'H' characters.
+    Calculates the minimum number of operations needed
+    to get exactly n 'H' characters.
 
-    Operations allowed:
+    Only two operations are allowed:
     - Copy All
     - Paste
 
