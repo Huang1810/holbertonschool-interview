@@ -10,14 +10,14 @@
  */
 static int should_draw(int row, int col)
 {
-    while (row > 0 || col > 0)
-    {
-        if (row % 3 == 1 && col % 3 == 1)
-            return 0;
-        row /= 3;
-        col /= 3;
-    }
-    return 1;
+	while (row > 0 || col > 0)
+	{
+		if (row % 3 == 1 && col % 3 == 1)
+			return (0);
+		row /= 3;
+		col /= 3;
+	}
+	return (1);
 }
 
 /**
@@ -26,18 +26,15 @@ static int should_draw(int row, int col)
  */
 void menger(int level)
 {
-    if (level < 0)
-        return;
+	if (level < 0)
+		return;
+	int size = (int)pow(3, level);
+	int i, j;
 
-    int size = (int)pow(3, level);
-    int i, j;
-
-    for (i = 0; i < size; i++)
-    {
-        for (j = 0; j < size; j++)
-        {
-            putchar(should_draw(i, j) ? '#' : ' ');
-        }
-        putchar('\n');
-    }
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+			putchar(should_draw(i, j) ? '#' : ' ');
+		putchar('\n');
+	}
 }
