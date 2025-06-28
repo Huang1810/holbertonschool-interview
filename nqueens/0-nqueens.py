@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 
+
 def is_safe(queen_positions, row, col):
     """Check if it's safe to place a queen at the current position."""
     for r in range(row):
@@ -8,6 +9,7 @@ def is_safe(queen_positions, row, col):
         if c == col or abs(c - col) == abs(r - row):
             return False
     return True
+
 
 def solve_nqueens(N, row=0, queen_positions=[], solutions=[]):
     """Backtracking function to find all solutions."""
@@ -20,6 +22,7 @@ def solve_nqueens(N, row=0, queen_positions=[], solutions=[]):
             queen_positions.append(col)
             solve_nqueens(N, row + 1, queen_positions, solutions)
             queen_positions.pop()
+
 
 def main():
     """Main function to handle input and print solutions."""
@@ -39,6 +42,7 @@ def main():
     solve_nqueens(N, 0, [], solutions)
     for solution in solutions:
         print(solution)
+
 
 if __name__ == "__main__":
     main()
