@@ -8,25 +8,25 @@ if (!movieId) {
   process.exit(1);
 }
 
-const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
+const movieUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
 
-request(movieUrl, (err, res, body) => {
+request(movieUrl, async (err, res, body) => {
   if (err) return;
 
   const film = JSON.parse(body);
   const characters = film.characters;
 
-  printCharactersInOrder(characters, 0);
+  for (const url of characters) {
+    await new Promise((resolve, reject) => {
+      request(url, (error, response, charBody) => {
+        if (!error) {
+          const character = JSON.parse(charBody);
+          console.log(character.name);
+          resolve();
+        } else {
+          reject(error);
+        }
+      });
+    });
+  }
 });
-
-function printCharactersInOrder(characters, index) {
-  if (index >= characters.length) return;
-
-  request(characters[index], (err, res, body) => {
-    if (!err) {
-      const character = JSON.parse(body);
-      console.log(character.name);
-      printCharactersInOrder(characters, index + 1);
-    }
-  });
-}
