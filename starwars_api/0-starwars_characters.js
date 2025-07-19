@@ -8,22 +8,25 @@ if (!movieId) {
   process.exit(1);
 }
 
-// Get film data
-const url = `https://swapi.dev/api/films/${movieId}/`;
+const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
 
-request(url, (error, response, body) => {
-  if (error) return console.error(error);
+request(movieUrl, (err, res, body) => {
+  if (err) return;
 
   const film = JSON.parse(body);
   const characters = film.characters;
 
-  // Loop through characters in order and fetch each one
-  characters.forEach((characterUrl) => {
-    request(characterUrl, (err, res, characterBody) => {
-      if (!err) {
-        const character = JSON.parse(characterBody);
-        console.log(character.name);
-      }
-    });
-  });
+  printCharactersInOrder(characters, 0);
 });
+
+function printCharactersInOrder(characters, index) {
+  if (index >= characters.length) return;
+
+  request(characters[index], (err, res, body) => {
+    if (!err) {
+      const character = JSON.parse(body);
+      console.log(character.name);
+      printCharactersInOrder(characters, index + 1);
+    }
+  });
+}
