@@ -3,6 +3,7 @@
 Function to determine the fewest number of coins needed to meet a given amount.
 """
 
+
 def makeChange(coins, total):
     if total <= 0:
         return 0
