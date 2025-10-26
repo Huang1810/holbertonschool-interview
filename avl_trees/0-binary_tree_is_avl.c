@@ -8,15 +8,15 @@
  */
 int height(const binary_tree_t *tree)
 {
-    int left_h, right_h;
+	int left_h, right_h;
 
-    if (tree == NULL)
-        return (0);
+	if (tree == NULL)
+		return (0);
 
-    left_h = height(tree->left);
-    right_h = height(tree->right);
+	left_h = height(tree->left);
+	right_h = height(tree->right);
 
-    return ((left_h > right_h ? left_h : right_h) + 1);
+	return ((left_h > right_h ? left_h : right_h) + 1);
 }
 
 /**
@@ -28,28 +28,29 @@ int height(const binary_tree_t *tree)
  */
 int is_avl_helper(const binary_tree_t *tree, int min, int max)
 {
-    int left_h, right_h, diff;
+	int left_h, right_h, diff;
 
-    if (tree == NULL)
-        return (1);
+	if (tree == NULL)
+		return (1);
 
-    /* Check BST property */
-    if (tree->n < min || tree->n > max)
-        return (0);
+	/* Check BST property */
+	if (tree->n < min || tree->n > max)
+		return (0);
 
-    /* Check recursively left and right subtrees */
-    if (!is_avl_helper(tree->left, min, tree->n - 1) ||
-        !is_avl_helper(tree->right, tree->n + 1, max))
-        return (0);
+	/* Recursively check left and right subtrees */
+	if (!is_avl_helper(tree->left, min, tree->n - 1) ||
+	    !is_avl_helper(tree->right, tree->n + 1, max))
+		return (0);
 
-    /* Check height balance */
-    left_h = height(tree->left);
-    right_h = height(tree->right);
-    diff = left_h - right_h;
-    if (diff < -1 || diff > 1)
-        return (0);
+	/* Check height balance */
+	left_h = height(tree->left);
+	right_h = height(tree->right);
+	diff = left_h - right_h;
 
-    return (1);
+	if (diff < -1 || diff > 1)
+		return (0);
+
+	return (1);
 }
 
 /**
@@ -59,8 +60,8 @@ int is_avl_helper(const binary_tree_t *tree, int min, int max)
  */
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
-    if (tree == NULL)
-        return (0);
+	if (tree == NULL)
+		return (0);
 
-    return (is_avl_helper(tree, INT_MIN, INT_MAX));
+	return (is_avl_helper(tree, INT_MIN, INT_MAX));
 }
